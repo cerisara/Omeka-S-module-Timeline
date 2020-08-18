@@ -867,9 +867,24 @@ function animateLeft(obj, from, to){
 	}
 }
 
+function switchFS() {
+	if (window.isfs) {
+		window.isfs = false;
+	} else {
+		window.isfs = true;
+		// TODO: remettre ici le CSS comme avant le fullscreen
+		alert("small screen");
+		document.removeEventListener("fullscreenchange",window.fsel, false);
+	}
+}
+
 function enableFullPage() {
-	
+
 	var element = document.getElementById("tlandfilters");
+	window.isfs = true;
+	window.fsel = element;
+	element.addEventListener("fullscreenchange", switchFS, false);
+
 	if (element.requestFullscreen) { // W3C API
 		element.requestFullscreen();
 	} else if (element.mozRequestFullScreen) { // Mozilla current API
@@ -877,6 +892,42 @@ function enableFullPage() {
 	} else if (element.webkitRequestFullScreen) { // Webkit current API
 		element.webkitRequestFullScreen();
 	}
+
+	var tlband = element.children[0];
+	tlband.style.margin = "0";
+	tlband.style.padding = "0";
+	tlband.style.height = "100vh";
+	tlband.style.width = "100vw";
+
+	var band0 = tlband.children[2];
+	band0.style.height = "90vh";
+
+	// TODO: finir le CSS pour deplacer la bande du bas et ajouter les filtres
+
+	/*
+	for (var i=0; i<b.length; i++) {
+		var fw = [];
+		fw = b[i].className.split(" ");
+		if (fw[0] === "timeline") {
+			window.cadreExtMargin = b[i].style.margin;
+			b[i].style.margin = "0";
+			window.cadreExtPadding = b[i].style.padding;
+			b[i].style.padding = "0";
+			window.cadreExtHeight = b[i].style.height;
+			b[i].style.height = "100vh";
+			window.cadreExtWidth = b[i].style.width;
+			b[i].style.width = "100vw";
+			window.tlHautHeight = b[i].children[2].style.height;
+			b[i].children[2].style.height = "90vh";
+			b[i].children[2].style.top = 0+"px";
+			window.tlBasTop = b[i].children[4].style.top;
+			b[i].children[4].style.top = "0";
+			window.tlBasHeight = b[i].children[4].style.height;
+			b[i].children[4].style.height = "10vh";
+			b[i].children[4].style.top = b[i].children[2].clientHeight+"px";
+		}
+	}
+	*/
 
 	/*
 	alert("remove all");
