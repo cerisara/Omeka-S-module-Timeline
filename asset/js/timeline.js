@@ -61,7 +61,6 @@ var oTimeline = {
 	},
 
 	loadTimeline: function(timelineId, timelineData, params) {
-
 		var pageUrlIndex = window.location.href.lastIndexOf("/s/");
 		window.pagePrefix = window.location.href.slice(0, pageUrlIndex)+"/";
 
@@ -299,7 +298,7 @@ function exportCSV() {
 }
 
 function getBaseLinkItems() {
-	if (window.baseurl.length==0) {
+	if (window.baseurl.length==0 && window.listEvts.length>0) {
 		window.baseurl =  window.listEvts[0].getLink();
 		var ii = window.baseurl.lastIndexOf("/");
 		var s = window.baseurl.slice(0, ii+1);
@@ -709,29 +708,25 @@ function metaSearch() {
 	searchInMetadata();
 	if (window.metadataIds==null || window.metadataIds.length <1) return;
 	window.tl.paint();
-	focus();
+	// focus();
 	crBtExport();
 }
 
 function focus() {
-	var url = getBaseLinkItems() + window.metadataIds[0];
-	httpGet(url, function(rep) {
-		var indice = rep.indexOf('Date');
-		var s = rep;
-		s = rep.slice(indice);
-		indice = s.indexOf('lang="">');
-		s = s.slice(indice);
-		indice = s.indexOf('\n');
-		s = s.slice(indice);
-		indice = s.indexOf('\n');
-		s = s.slice(indice+1);
-		indice = s.indexOf('\n');
-		s = s.slice(indice-28);
-		indice = s.indexOf(' ');
-		s = s.substr(0, indice);
-		console.log(s);
-		window.tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime(s));
-	})
+	if (window.metadataIds.length>0) {
+		// Attention: getBaseLinkItems() retourne vide s'il n'y a aucun elt de visible a l'écran !!
+		var url = getBaseLinkItems() + window.metadataIds[0];
+		console.log("focus "+url);
+		httpGet(url, function(rep) {
+			console.log("focusrep "+rep);
+			var indice = rep.indexOf('Date');
+			var s = rep;
+			s = rep.slice(indice);
+			s = s.replace(/<[^>]*>?/gm, '');
+			console.log("date "+s);
+			window.tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime(s));
+		})
+	}
 }
 
 function onCheck(timeline, bandIndices, table) {
