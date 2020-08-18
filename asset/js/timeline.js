@@ -545,8 +545,8 @@ function setupFilterHighlightControls(timeline, bandIndices, theme, params) {
 	var divlabels = document.getElementById("fltLabelsButton");
 	var divflt = document.getElementById("ckbfilters");
 
-	divlabels.appendChild(tablelabels);
-	divflt.appendChild(tableflt);
+	if (divlabels != null) divlabels.appendChild(tablelabels);
+	if (divflt != null) divflt.appendChild(tableflt);
 
 	window.handlerCkb = function(elmt, evt, target) {
 		onCheck(timeline, bandIndices, tableflt);
@@ -868,6 +868,43 @@ function animateLeft(obj, from, to){
 }
 
 function enableFullPage() {
+	
+	var element = document.getElementById("tlandfilters");
+	if (element.requestFullscreen) { // W3C API
+		element.requestFullscreen();
+	} else if (element.mozRequestFullScreen) { // Mozilla current API
+		element.mozRequestFullScreen();
+	} else if (element.webkitRequestFullScreen) { // Webkit current API
+		element.webkitRequestFullScreen();
+	}
+
+	/*
+	alert("remove all");
+	const rt = document.documentElement;
+	while (rt.firstChild) {
+	    rt.removeChild(rt.lastChild);
+	}
+	rt.appendChild(tl);
+	*/
+
+	/*
+	 *
+	 $timelineVariables = 'Timeline_ajax_url="' . $assetUrl('vendor/simile/ajax-api/simile-ajax-api.js', 'Timeline') . '";' . PHP_EOL;
+                $timelineVariables .= 'Timeline_urlPrefix="' . dirname($assetUrl('vendor/simile/timeline-api/timeline-api.js', 'Timeline')) . '/";' . PHP_EOL;
+                $timelineVariables .= 'Timeline_parameters="bundle=true";';
+                $view->headLink()
+                    ->appendStylesheet($assetUrl('css/timeline.css', 'Timeline'));
+                $view->headScript()
+                    ->appendFile($assetUrl('js/timeline.js', 'Timeline'))
+                    ->appendScript($timelineVariables)
+                    ->appendFile($assetUrl('vendor/simile/timeline-api/timeline-api.js', 'Timeline'))
+                    ->appendScript('SimileAjax.History.enabled = false; // window.jQuery = SimileAjax.jQuery;');
+                break;
+
+	 *
+	 * */
+
+	/*
 	window.fltVisible=1;
 	var b = document.getElementsByClassName("blocks")[0].children;
 	for (var i=0; i<b.length; i++) {
@@ -882,12 +919,14 @@ function enableFullPage() {
 	}
 	tete = document.head;
 	var opened = window.open("","_self");
-	opened.document.write("<html><head><title>MyTitle</title></head><body><div id=\"tout\"></div></body></html>");
+	opened.document.write("<html><head><title>MyTitle</title><link href=\""+window.pagePrefix+"/modules/Timeline/asset/css/timeline.css\" rel=\"stylesheet\"></head><body><div id=\"tout\" class=\"timeline\"></div></body></html>");
 	oTimeline._containerDiv = document.getElementById("tout");
-	oTimeline.loadTimeline(window.tlid,window.tldata,window.params);
+	oTimeline.loadTimeline("tout",window.tldata,window.params);
 	//opened.document.getElementById("tout").appendChild(tmln);
 	//opened.document.getElementsByTagName('head')[0].appendChild(tete);
 	//console.log(tmln.style);
+	*/
+
 }
 
 function disableFullPage() {
